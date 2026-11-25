@@ -14,7 +14,7 @@ rem   2. 括号块内绝不出现裸的 echo 路径变量，避免右括号把块截断。
 rem   3. rem 注释里不要写尖括号、竖线、和号。
 rem   4. 删除逻辑必须内联，不能提取成 call 子程序（实测会静默失效）。
 rem ============================================================
-set "TOOLV=4.4"
+set "TOOLV=4.4.1"
 title NVLITE v%TOOLV%
 
 rem --- 1. 取输入 ---
@@ -227,7 +227,7 @@ for %%F in (%DROP%) do for /f "delims=" %%X in ('dir /s /b "%DDF%\%%F" 2^>nul') 
 rem 同样，清空 DROPDIR 后要跳过这个循环
 if not defined DROPDIR goto :trimdone
 for %%D in (%DROPDIR%) do if exist "%DDF%\%%D\" (
-    >>"%LOG%" echo [TRIMDIR] %%D
+    >>"%LOG%" echo [TRIMDIR] "%%D"
     rd /q /s "%DDF%\%%D" >nul 2>&1
     if not exist "%DDF%\%%D\" set /a TRIM+=1 >nul
 )

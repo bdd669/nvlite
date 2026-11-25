@@ -135,8 +135,10 @@ set "DROPDIR="
 | 621.24 | 桌面版，991 MiB | 生成、安装、驱动生效 |
 | 621.40 | 桌面版，988 MiB | 生成、安装、驱动生效 |
 
-Windows 11 x64，解压器用 NanaZip（Microsoft Store 版）。Bandizip 和 WinRAR 的支持代码
-写了但没测过，如果这两个失败就用 NanaZip。
+Windows 11 x64，解压器用 NanaZip（Microsoft Store 版）。
+
+**除了 NanaZip，其他解压器都没有在真机上跑过。** 7-Zip、Bandizip、WinRAR 这三条分支
+的参数语法查过资料，代码也写了，但没用真实的 NVIDIA 包验证过。失败就直接换 NanaZip。
 
 ## 许可
 

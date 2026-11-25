@@ -1,0 +1,45 @@
+NVLITE 日志样例
+============================================================
+
+下面是 621.24 桌面版一次**真实成功运行**的日志，脱敏后只保留关键行。
+
+注意：这份日志来自早期版本（v1.x），所以开头没有版本号、结尾没有 [LIST] 段。
+当前版本 v4.4 的日志长这样：
+
+    [NVLITE v4.4 2026-11-25] 运行于 2026/11/25 周三 16:50:35.02
+    [ZIP] C:\Users\<user>\...\NanaZipC.exe (模式 7z)
+    [REQ] Display.Driver NVI2 setup.exe setup.cfg ListDevices.txt PhysX HDAudio EULA.txt
+    [DROP]  / 
+    ...（解压器输出，同上）...
+    [LIST] Display.Driver 下的子目录:
+       Display.NvContainer
+       ngx-builtins
+       NVCPL
+       NVWMI
+
+用它判断一次新失败是回归还是环境问题。
+
+--- 真实日志：头部 ---
+[NVLITE] 2026/11/22 周日  2:45:03.83
+[ZIP] C:\Users\<user>\AppData\Local\Microsoft\WindowsApps\NanaZipC.exe
+
+NanaZip 7.0 , version 2610.2 (x64) : (c) M2-Team and Contributors. All rights reserved.
+
+Scanning the drive for archives:
+1 file, 1038235672 bytes (991 MiB)
+
+
+--- 真实日志：结果行 ---
+Everything is Ok
+Folders: 38
+Files: 1171
+Size:       4099951240
+Compressed: 1038235672
+
+--- 怎么读 ---
+1. 第一行确认版本号。如果只有 [NVLITE] 没有版本号，说明跑的是 v2.0 之前的旧文件。
+2. [ZIP] 行确认用的哪个解压器、哪种参数语法（模式 7z / bz / rar）。
+3. Everything is Ok 说明解压器本身没报错。没有这行就在前面找报错。
+4. [TRIM] / [TRIMDIR] 只在你填了 DROP / DROPDIR 时才出现。默认配置下不该有。
+5. [LIST] 是 Display.Driver 下的子目录清单。和上面那份对比，能看出驱动包结构有没有变。
+6. 缺文件时脚本会在屏幕上打印 [错误] 解压不完整，并把缺的项列出来，同时写进日志。

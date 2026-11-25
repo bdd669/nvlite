@@ -54,7 +54,7 @@ AI 生成的代码有一个特点：**它在常见路径上通常是对的，在
 
 1. **建一个系统还原点**。或者至少保证你能进安全模式。
 2. **留一份官方原版驱动包**。万一装坏了，可以重装或回滚。
-3. **自己读一遍 `NVLITE.bat`**。236 到 285 行，不难读完。如果不放心 AI 写的代码，
+3. **自己读一遍 `NVLITE.bat`**。285 行，一个下午能读完。如果不放心 AI 写的代码，
    这是最直接的办法。
 4. **先在非主力机器上试**。有第二台机器的话。
 5. **出问题先看 `nvlite_log.txt`**。里面记录了每一步做了什么。
@@ -135,8 +135,8 @@ fifth one waiting.
 
 1. **Create a system restore point.** Or at least make sure you can boot into safe mode.
 2. **Keep the official driver package.** So you can reinstall or roll back.
-3. **Read `NVLITE.bat` yourself.** It's under 300 lines. If you don't trust AI-written code,
-   this is the direct answer.
+3. **Read `NVLITE.bat` yourself.** 285 lines. An afternoon's read. If you don't trust
+   AI-written code, this is the direct answer.
 4. **Try it on a spare machine if you have one.**
 5. **When something breaks, read `nvlite_log.txt` first.** It records what each step did.
 

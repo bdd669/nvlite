@@ -10,11 +10,26 @@
 
 | 项 | 值 |
 |---|---|
-| 版本 | v4.4，285 行，10850 字节（CRLF） |
+| 版本 | v4.4.1，285 行（CRLF） |
 | 仓库 | https://github.com/bdd669/nvlite （public） |
-| 最新 release | v4.4，附 `.bat` 和 `.zip` |
+| 最新 release | v4.4（v4.4.1 只有引号修正，未单独发 release） |
 | 真机验证 | 621.24 桌面版装上、621.40 桌面版装上 |
 | 当前可用 | 是，没有已知会导致失败的问题 |
+
+## 一之二、真机测试环境
+
+| 项 | 值 |
+|---|---|
+| 系统 | Windows 11 x64，管理员账户 |
+| 解压器 | NanaZip（Microsoft Store 版），`NanaZipC.exe` |
+| 驱动包 | `621.24-desktop-win10-win11-64bit-international-nsd-dch-whql.exe`（991 MiB）|
+| | `621.40-desktop-win10-win11-64bit-international-nsd-dch-whql.exe`（988 MiB）|
+| 显卡型号 | **未记录**，接手时建议补上 |
+| 安装方式 | 双击 `Setup.exe` 手动装（`Install_Silent.bat` 从未实测） |
+
+输出目录里有一份 `nvlite_log.txt`，是 621.24 那次的完整日志，脱敏样例见
+[`docs/log-sample.txt`](docs/log-sample.txt)。判断一次新失败是回归还是环境问题，
+先拿它对比。
 
 ## 二、目录结构
 
@@ -36,7 +51,7 @@
 
 | 路径 | 原因 |
 |---|---|
-| `归档/` | 历史版本 `NVLITE_v*.bat`，含几个有 bug 的 |
+| `归档/` | 历史版本。**注意 `NVLITE.bat.call-坏了`、`NVLITE_v3.1.1.bat.bak`、`NVLITE_v4.1.bat.bak` 这三个有已知 bug，只供对照，不要当参考实现** |
 | `实测样本/` | 真机测试产物，含本机用户路径 |
 | `项目说明.md` | 内部记录，内容已并入 docs |
 | `NVLITE_使用说明.txt` | 和 README 重复 |
@@ -142,10 +157,11 @@ set "DROPDIR="                                          保持空
 | v3.1.1 | 178 | **含 2 个静默失效 bug**：`for` 累加覆盖、`findstr /b` 版本号提取失效 |
 | v4.2 | 232 | 4 个 bug 全修，真机验证通过 |
 | v4.3 | 236 | 4 处稳定性加固（`DisableDelayedExpansion`、备用判据等） |
-| **v4.4** | **285** | 解压器支持扩展到 4 种工具、3 种语法 |
+| v4.4 | 285 | 解压器支持扩展到 4 种工具、3 种语法 |
+| **v4.4.1** | **285** | 块内裸 echo 变量补引号（死代码路径），文档修正 |
 
-行数从 165 涨到 285 是故意的。中间为了"精简"把校验压进 `for`，直接埋了 bug。
-从那以后不压行数。
+行数从 165 涨到 285 是故意的。165 是 v2.0 之后某一版的中间状态（不在上表里），
+当时为了"精简"把校验压进 `for`，直接埋了 bug。从那以后不再压行数。
 
 ## 十一、AI 开发的背景
 

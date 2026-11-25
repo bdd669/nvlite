@@ -144,8 +144,11 @@ working and games can run slower when plugged in. Use the official package inste
 | 621.24 | desktop, 991 MiB | generated, installed, driver active |
 | 621.40 | desktop, 988 MiB | generated, installed, driver active |
 
-Windows 11 x64, NanaZip (Microsoft Store version) as the extractor. Bandizip and WinRAR
-support is written but untested — if either fails, use NanaZip.
+Windows 11 x64, NanaZip (Microsoft Store version) as the extractor.
+
+**Nothing other than NanaZip has been run on real hardware.** The 7-Zip, Bandizip and WinRAR
+branches have their argument syntax researched and the code written, but none of them was
+exercised against an actual NVIDIA package. If one fails, use NanaZip.
 
 ## License
 
