@@ -14,7 +14,7 @@ rem   2. 括号块内绝不出现裸的 echo 路径变量，避免右括号把块截断。
 rem   3. rem 注释里不要写尖括号、竖线、和号。
 rem   4. 删除逻辑必须内联，不能提取成 call 子程序（实测会静默失效）。
 rem ============================================================
-set "TOOLV=4.3"
+set "TOOLV=4.4"
 title NVLITE v%TOOLV%
 
 rem --- 1. 取输入 ---
@@ -33,26 +33,60 @@ for %%A in ("%P%") do set "P=%%~fA"
 if /i not "%P:~-4%"==".exe" (echo [错误] 只接受 .exe 驱动包 & echo        你给的是: "%P%" & pause & exit /b 1)
 if not exist "%P%" (echo [错误] 找不到文件: "%P%" & pause & exit /b 1)
 
-rem --- 2. 找解压器：NanaZip 优先，其次 7-Zip，最后 Bandizip ---
-rem 只认命令行版，GUI 版（NanaZip.exe、7zG.exe、Bandizip.exe）在批处理里不可控
-set "Z="
-for %%N in (NanaZipC.exe 7z.exe 7za.exe 7zz.exe bz.exe) do if not defined Z if exist "%~dp0%%N" set "Z=%~dp0%%N"
+rem --- 2. 找解压器 ---
+rem NVIDIA 的包是 7z 格式，只认能读 7z 的命令行工具，三种语法：
+rem   7z = NanaZip / 7-Zip / 7zr      bz = Bandizip      rar = WinRAR
+rem 不含：Windows 自带 tar/expand（读不了 7z）、各 GUI 版（没稳定命令行）
+rem 想写死路径就填下面这行，填了就不自动找：
+set "ZMANUAL="
+rem 例：set "ZMANUAL=C:\Program Files\7-Zip\7z.exe"
+
+rem 候选文件名。同一份清单用于"脚本同目录"和"PATH 里找"
+set "ZCAND=NanaZipC.exe 7z.exe 7za.exe 7zz.exe 7zr.exe bz.exe WinRAR.exe"
+set "Z=%ZMANUAL%"
+
+rem 1) 脚本同目录（绿色版 / 便携版放这里最省事）
+if not defined Z for %%N in (%ZCAND%) do if not defined Z if exist "%~dp0%%N" set "Z=%~dp0%%N"
+
+rem 2) 常见安装位置
 if not defined Z for %%X in (
     "C:\Program Files\NanaZip\NanaZipC.exe"
     "%LOCALAPPDATA%\Microsoft\WindowsApps\NanaZipC.exe"
     "C:\Program Files\7-Zip\7z.exe"
     "C:\Program Files (x86)\7-Zip\7z.exe"
+    "%LOCALAPPDATA%\Programs\7-Zip\7z.exe"
     "C:\Program Files\Bandizip\bz.exe"
+    "%LOCALAPPDATA%\Programs\Bandizip\bz.exe"
+    "C:\Program Files\WinRAR\WinRAR.exe"
+    "C:\Program Files (x86)\WinRAR\WinRAR.exe"
 ) do if not defined Z if exist %%X set "Z=%%~X"
-if not defined Z for %%N in (NanaZipC.exe 7z.exe bz.exe) do if not defined Z for /f "delims=" %%A in ('where %%N 2^>nul') do if not defined Z set "Z=%%A"
+
+rem 3) PATH 里找
+if not defined Z for %%N in (%ZCAND%) do if not defined Z for /f "delims=" %%A in ('where %%N 2^>nul') do if not defined Z set "Z=%%A"
+
 if not defined Z goto :nozip
+
+rem 4) 按文件名判定用哪套参数
 set "ZM=7z"
 if /i "%Z:~-7%"=="\bz.exe" set "ZM=bz"
+if /i "%Z:~-11%"=="\WinRAR.exe" set "ZM=rar"
 goto :filever
 
 :nozip
-echo [错误] 没找到解压器。
-echo        装 NanaZip 或 7-Zip 即可，或把 NanaZipC.exe 放到本脚本同目录。
+echo [错误] 没找到可用的解压器。
+echo.
+echo        NVIDIA 驱动包是 7z 格式，需要下面任意一个命令行工具：
+echo          NanaZip     NanaZipC.exe
+echo          7-Zip       7z.exe / 7za.exe / 7zz.exe / 7zr.exe
+echo          Bandizip    bz.exe
+echo          WinRAR      WinRAR.exe
+echo.
+echo        三种解决办法，任选：
+echo          1. 装上面任意一个（NanaZip 或 7-Zip 最省事）
+echo          2. 把 NanaZipC.exe 或 7z.exe 放到本脚本同目录
+echo          3. 在本脚本里给 ZMANUAL 填上完整路径
+echo.
+echo        注意：Windows 自带的压缩功能读不了这种包，必须装上面这些。
 pause & exit /b 1
 
 :filever
@@ -131,12 +165,27 @@ set "DDF=%OUT%\Display.Driver"
 echo [+] 正在解压 %VER%，请稍候（约 1-2 分钟）...
 
 rem --- 6. 核心：只提取白名单，其余不解压 ---
-if "%ZM%"=="bz" (
-    "%Z%" x -y -o:"%OUT%" "%P%" %REQ% %EXTRA% >>"%LOG%" 2>&1
-) else (
-    "%Z%" x "%P%" -o"%OUT%" %REQ% %EXTRA% -aoa -mmt=%TH% >>"%LOG%" 2>&1
-)
+rem 三种命令行语法不同，用 goto 分派。每种分支里单独取 errorlevel，
+rem 避免 goto 干扰取值时机。
+if "%ZM%"=="bz" goto :x_bz
+if "%ZM%"=="rar" goto :x_rar
+rem 默认：7z 系（NanaZip / 7-Zip / 7zr）
+"%Z%" x "%P%" -o"%OUT%" %REQ% %EXTRA% -aoa -mmt=%TH% >>"%LOG%" 2>&1
 set "RC=%errorlevel%"
+goto :x_done
+
+:x_bz
+rem Bandizip：参数顺序不同，-y 自动覆盖，没有 -mmt
+"%Z%" x -y -o:"%OUT%" "%P%" %REQ% %EXTRA% >>"%LOG%" 2>&1
+set "RC=%errorlevel%"
+goto :x_done
+
+:x_rar
+rem WinRAR：目标目录放在最后且不带 -o，-ibck 让它后台运行不弹窗
+"%Z%" x -y -ibck "%P%" %REQ% %EXTRA% "%OUT%" >>"%LOG%" 2>&1
+set "RC=%errorlevel%"
+
+:x_done
 
 rem --- 7. 校验必需项（缺任何一项都不该继续）---
 rem 这里必须一行一个，不能塞进 for：for 的 DO 子句只解析一次，
