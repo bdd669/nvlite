@@ -153,3 +153,8 @@ MIT. See [LICENSE](LICENSE).
 
 Not affiliated with NVIDIA. NVIDIA, GeForce and related marks are trademarks of
 NVIDIA Corporation.
+
+## For whoever maintains this next
+
+Project conventions, current state, open items and past decisions live in
+[`AGENTS.md`](AGENTS.md) and [`HANDOFF.md`](HANDOFF.md).

@@ -143,3 +143,7 @@ Windows 11 x64，解压器用 NanaZip（Microsoft Store 版）。Bandizip 和 Wi
 MIT，见 [LICENSE](LICENSE)。
 
 与 NVIDIA 无关。NVIDIA、GeForce 及相关标识是 NVIDIA Corporation 的商标。
+
+## 给接手维护的人
+
+这个项目的约定、状态、待办和历史决策，见 [`AGENTS.md`](AGENTS.md) 和 [`HANDOFF.md`](HANDOFF.md)。
