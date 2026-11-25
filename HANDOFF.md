@@ -16,23 +16,33 @@
 | 真机验证 | 621.24 桌面版装上、621.40 桌面版装上 |
 | 当前可用 | 是，没有已知会导致失败的问题 |
 
-## 二、两个目录的关系
+## 二、目录结构
 
-| 路径 | 用途 |
+所有东西都在 `/home/bdd669/nvlite`，一个目录，既是工作区也是 git 仓库。
+
+会提交的：
+
+| 文件 | 说明 |
 |---|---|
-| `/home/bdd669/nvlite` | 开发目录。有历史版本（`归档/`）、实测样本（`实测样本/`）、使用说明 |
-| `/home/bdd669/github/nvlite` | GitHub 仓库映射，本目录 |
+| `NVLITE.bat` | 主程序，文件名不带版本号 |
+| `README.md` / `README.en.md` | 中英文说明，中文是默认显示 |
+| `DISCLAIMER.md` | AI 开发声明，含测试范围和风险 |
+| `LICENSE` | MIT，头部有一行 AI 注明 |
+| `AGENTS.md` | 给 AI 会话的约定，四条铁律在那里 |
+| `HANDOFF.md` | 就是这份 |
+| `docs/technical-notes-zh.md` | 技术细节、踩过的坑、版本演进 |
 
-改代码的流程：
+不提交的（`.gitignore` 排除）：
 
-```
-1. 在 /home/bdd669/nvlite 改 NVLITE_v4.x.bat，验证
-2. 复制到 /home/bdd669/github/nvlite/NVLITE.bat
-3. 同步文档
-4. commit + push
-```
+| 路径 | 原因 |
+|---|---|
+| `归档/` | 历史版本 `NVLITE_v*.bat`，含几个有 bug 的 |
+| `实测样本/` | 真机测试产物，含本机用户路径 |
+| `项目说明.md` | 内部记录，内容已并入 docs |
+| `NVLITE_使用说明.txt` | 和 README 重复 |
 
-**注意**：开发目录里的文件名带版本号（`NVLITE_v4.4.bat`），仓库里统一叫 `NVLITE.bat`。
+**发版流程**：改 `NVLITE.bat` → 真机验证 → 把 `cp NVLITE.bat 归档/NVLITE_vX.Y.bat` →
+同步文档 → commit → `gh release create` 附 bat 和 zip。
 
 ## 三、脚本干什么
 

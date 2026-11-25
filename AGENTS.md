@@ -1,6 +1,7 @@
 # NVLITE 项目约定
 
-这个目录是 NVLITE 的 GitHub 仓库映射。开发目录在 `/home/bdd669/nvlite`。
+这是 NVLITE 的唯一工作目录，既是开发目录也是 git 仓库。
+在 `/home/bdd669/nvlite` 启动 pi 就是本项目的会话。
 
 ## 项目是什么
 
@@ -41,7 +42,6 @@ Windows 批处理脚本，把 NVIDIA 官方驱动包拆开，只解压白名单�
 ## 发布
 
 ```bash
-cd /home/bdd669/github/nvlite
 git add -A && git commit -m "..." && git push origin main
 ```
 
@@ -49,6 +49,32 @@ git add -A && git commit -m "..." && git push origin main
 `http.version=HTTP/1.1`、`http.postBuffer=524288000`。重试即可。
 
 发布 release 用 `gh release create`，附 `.bat` 和 `.zip`。
+
+## 目录结构
+
+仓库里的文件（会被提交）：
+
+```
+NVLITE.bat              主程序，无版本号后缀，内容 = 最新的 NVLITE_vN.N.bat
+README.md               中文，GitHub 默认显示
+README.en.md            英文
+DISCLAIMER.md           AI 声明，改测试范围时更新
+LICENSE                 MIT
+AGENTS.md               本文件，给 AI 会话看的约定
+HANDOFF.md              交接文档，给下一个会话看
+docs/technical-notes-zh.md   技术细节和所有踩过的坑
+```
+
+本地保留但不提交（`.gitignore` 已排除）：
+
+```
+归档/                   历史版本 NVLITE_v*.bat 和 zip
+实测样本/               真机测试产物，含本机路径
+项目说明.md             内部演进记录，已并入 docs/
+NVLITE_使用说明.txt     内容与 README 重复
+```
+
+发布新版本时：改 `NVLITE.bat`，把带版本号的副本丢进 `归档/`，同步文档，commit。
 
 ## 文档
 
