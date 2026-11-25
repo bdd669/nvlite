@@ -1,0 +1,24 @@
+# 输出目录（脚本生成的安装源）
+*-Desktop-Win11/
+*-Laptops-Win11/
+
+# 解压产物与日志
+nvlite_log.txt
+setup.cfg
+setup.cfg.bak
+setup.cfg.tmp
+Install_Silent.bat
+EULA.txt
+ListDevices.txt
+
+# 驱动包（体积大，不入库）
+*.exe
+!NVLITE.bat
+
+# 临时文件
+*.tmp
+*.bak
+~$*
+Thumbs.db
+desktop.ini
+.DS_Store
